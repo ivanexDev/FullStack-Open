@@ -4,15 +4,22 @@ import { useState } from "react";
 
 const Anecdotes = ({ anecdotes }) => {
   const [selected, setSelected] = useState(0);
+  const [points, setPoints] = useState({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 });
 
   const random = () => {
     const randomNumber = Math.floor(Math.random() * anecdotes.length);
     setSelected(randomNumber);
   };
 
+  const handlePoints = () => {
+    setPoints({ ...points, [selected]: points[selected] + 1 });
+  };
+
   return (
     <div>
       <p>{anecdotes[selected]}</p>
+      <p>has {points[selected]} votes</p>
+      <button onClick={handlePoints}>vote</button>
       <button onClick={random}>New anecdote</button>
     </div>
   );
