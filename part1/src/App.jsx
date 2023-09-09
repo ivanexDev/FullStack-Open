@@ -13,11 +13,26 @@ const Statistics = ({ good, neutral, bad }) => {
 
   return (
     <div>
-      <p>All: {all}</p>
-      <p>Avarage: {avarage}</p>
-      <p>Positive: {positive}</p>
+      <StatisticLine text="Good" state={good} />
+      <StatisticLine text="Neutral" state={neutral} />
+      <StatisticLine text="Bad" state={bad} />
+      <StatisticLine text="All" state={all} />
+      <StatisticLine text="Avarage" state={avarage} />
+      <StatisticLine text="Positive" state={positive} />
     </div>
   );
+};
+
+const StatisticLine = ({ text, state }) => {
+  return (
+    <p>
+      {text}: {state}
+    </p>
+  );
+};
+
+const Button = ({ handleClick, text }) => {
+  return <button onClick={() => handleClick(text)}>{text}</button>;
 };
 
 const App = () => {
@@ -26,13 +41,13 @@ const App = () => {
   const [bad, setBad] = useState(0);
 
   const handleClick = (value) => {
-    if (value === "good") {
+    if (value === "Good") {
       setGood(good + 1);
     }
-    if (value === "neutral") {
+    if (value === "Neutral") {
       setNeutral(neutral + 1);
     }
-    if (value === "bad") {
+    if (value === "Bad") {
       setBad(bad + 1);
     }
   };
@@ -40,13 +55,10 @@ const App = () => {
   return (
     <div>
       <h1>Give Feedback</h1>
-      <button onClick={() => handleClick("good")}>Good</button>
-      <button onClick={() => handleClick("neutral")}>Neutral</button>
-      <button onClick={() => handleClick("bad")}>Bad</button>
+      <Button handleClick={handleClick} text="Good" />
+      <Button handleClick={handleClick} text="Neutral" />
+      <Button handleClick={handleClick} text="Bad" />
       <h2>Statics</h2>
-      <p>Good: {good}</p>
-      <p>Neutral: {neutral}</p>
-      <p>Bad: {bad}</p>
       <Statistics good={good} neutral={neutral} bad={bad} />
     </div>
   );
