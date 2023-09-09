@@ -2,9 +2,18 @@
 
 import { useState } from "react";
 
+const AnecdoteContainer = ({ anecdotes, points }) => {
+  return (
+    <>
+      <p>{anecdotes}</p>
+      <p>has {points} votes</p>
+    </>
+  );
+};
+
 const Anecdotes = ({ anecdotes }) => {
   const [selected, setSelected] = useState(0);
-  const [points, setPoints] = useState({ 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 });
+  const [points, setPoints] = useState([0, 0, 0, 0, 0, 0]);
 
   const random = () => {
     const randomNumber = Math.floor(Math.random() * anecdotes.length);
@@ -12,15 +21,28 @@ const Anecdotes = ({ anecdotes }) => {
   };
 
   const handlePoints = () => {
-    setPoints({ ...points, [selected]: points[selected] + 1 });
+    setPoints((prevState) => {
+      const copy = [...prevState];
+      copy[selected] += 1;
+      return copy;
+    });
   };
+
+  const everyZero = points.every((point) => point === 0);
+
+  const mostVotes = points.indexOf(Math.max(...points));
 
   return (
     <div>
-      <p>{anecdotes[selected]}</p>
-      <p>has {points[selected]} votes</p>
+      <AnecdoteContainer
+        anecdotes={anecdotes[selected]}
+        points={points[selected]}
+      />
       <button onClick={handlePoints}>vote</button>
       <button onClick={random}>New anecdote</button>
+      {everyZero ? null : (
+        <p>Anecdote with most votes: {anecdotes[mostVotes]}</p>
+      )}
     </div>
   );
 };
