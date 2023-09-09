@@ -2,83 +2,33 @@
 
 import { useState } from "react";
 
-const Statistics = ({ good, neutral, bad }) => {
-  const all = good + neutral + bad;
-  const avarage = (good - bad) / all;
-  const positive = (good / all) * 100;
+const Anecdotes = ({ anecdotes }) => {
+  const [selected, setSelected] = useState(0);
 
-  if (all === 0) {
-    return <p>No feedback given</p>;
-  }
-
-  return (
-    <table>
-      <tbody>
-        <StatisticLine text="Good" state={good} />
-        <StatisticLine text="Neutral" state={neutral} />
-        <StatisticLine text="Bad" state={bad} />
-        <StatisticLine text="All" state={all} />
-        <StatisticLine text="Avarage" state={avarage} />
-        <StatisticLine text="Positive" state={positive} />
-      </tbody>
-    </table>
-  );
-};
-
-const StatisticLine = ({ text, state }) => {
-  if (text === "Positive") {
-    return (
-      <>
-        <tr>
-          <td>{text}:</td>
-
-          <td>{state} %</td>
-        </tr>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <tr>
-        <td>{text}:</td>
-
-        <td>{state}</td>
-      </tr>
-    </>
-  );
-};
-
-const Button = ({ handleClick, text }) => {
-  return <button onClick={() => handleClick(text)}>{text}</button>;
-};
-
-const App = () => {
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
-
-  const handleClick = (value) => {
-    if (value === "Good") {
-      setGood(good + 1);
-    }
-    if (value === "Neutral") {
-      setNeutral(neutral + 1);
-    }
-    if (value === "Bad") {
-      setBad(bad + 1);
-    }
+  const random = () => {
+    const randomNumber = Math.floor(Math.random() * anecdotes.length);
+    setSelected(randomNumber);
   };
 
   return (
     <div>
-      <h1>Give Feedback</h1>
-      <Button handleClick={handleClick} text="Good" />
-      <Button handleClick={handleClick} text="Neutral" />
-      <Button handleClick={handleClick} text="Bad" />
-      <h2>Statics</h2>
-      <Statistics good={good} neutral={neutral} bad={bad} />
+      <p>{anecdotes[selected]}</p>
+      <button onClick={random}>New anecdote</button>
     </div>
   );
 };
+
+const anecdotes = [
+  "If it hurts, do it more often",
+  "Adding manpower to a late software project makes it later!",
+  "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
+  "Any fool can write code that a computer can understand. Good programmers write code that humans can understand.",
+  "Premature optimization is the root of all evil.",
+  "Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.",
+];
+
+const App = () => {
+  return <Anecdotes anecdotes={anecdotes} />;
+};
+
 export default App;
