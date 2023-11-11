@@ -1,0 +1,8 @@
+body{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #202020;
+  color: white;
+}
