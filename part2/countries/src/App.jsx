@@ -14,7 +14,6 @@ function App() {
     axios
       .get("https://restcountries.com/v3.1/all")
       .then(({data})=>{
-        console.log(data)
         setCountries(data)})
   },[])
 
