@@ -1,13 +1,26 @@
 /* eslint-disable react/prop-types */
+import axios from "axios"
+import { useEffect } from 'react'
 import './App.css'
 import Note from './components/Note'
 import { useState } from 'react'
 
-function App(props) {
+function App() {
 
-  const [notes, setNotes] = useState(props.notes)
+  const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('a new note...')
   const [showAll, setShowAll] = useState(true)
+
+  useEffect(() => {
+    console.log('effect')
+    axios
+      .get('http://localhost:3001/notes')
+      .then(response => {
+        console.log('promise fulfilled')
+        setNotes(response.data)
+      })
+  }, [])
+  console.log('render', notes.length, 'notes')
 
   const addNote = (event) => { 
     event.preventDefault()
