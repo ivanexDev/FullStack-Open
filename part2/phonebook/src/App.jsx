@@ -10,8 +10,18 @@ const App = () => {
 
   const handleNewPerson = (event)=>{
     event.preventDefault()
+
+    const verify = persons.some((person)=> person.name === newName)
+
+    if(verify){
+      alert(`El nombre: ${newName}  ya existe, ingrese otro.`)
+      setNewName("")
+      return
+    }
     setPersons(persons.concat({name:newName}))
   }
+
+
 
   return (
     <div>
