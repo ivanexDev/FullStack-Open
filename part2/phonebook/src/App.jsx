@@ -1,4 +1,7 @@
 import { useState } from 'react'
+import PersonForm from './components/PersonForm'
+import Filter from './components/Filter'
+import Persons from './components/Persons'
 
 const App = () => {
   const [ persons, setPersons ] = useState([
@@ -21,7 +24,7 @@ const App = () => {
   const handleNewPerson = (event)=>{
     event.preventDefault()
 
-    const verify = persons.some((person)=> person.name === newName)
+    const verify = persons.some((person)=> person.name.toLowerCase() === newName.toLowerCase())
 
     if(verify){
       alert(`El nombre: ${newName}  ya existe, ingrese otro.`)
@@ -31,7 +34,7 @@ const App = () => {
     setPersons(persons.concat({name:newName, number: newNumber}))
   }
 
-  const renderdPersons = filter.length === 0 ? persons : persons.filter(({name})=>{
+  const renderedPersons = filter.length === 0 ? persons : persons.filter(({name})=>{
     return name.toLowerCase().includes(filter)})
 
 
@@ -40,18 +43,11 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>filter show with <input value={filter} onChange={({target})=>setFilter(target.value)} type="text" /></div>
-      <h2>add a new</h2>
-      <form onSubmit={handleNewPerson}>
-        <div>name: <input value={newName} onChange={handleName} /></div>
-        <div>number: <input value={newNumber} onChange={handleNumber} /></div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
-      <h2>Numbers</h2>
-
-    {renderdPersons.map((person,index)=> <p key={`${person.name}-${index}`}>{person.name} {person.number}</p>)}
+      <Filter filter={filter} setFilter={setFilter}/>
+      <h3>Add a new</h3>
+      <PersonForm handleNewPerson={handleNewPerson} newName={newName} handleName={handleName} newNumber={newNumber} handleNumber={handleNumber}/>
+      <h3>Numbers</h3>
+      <Persons renderedPersons={renderedPersons} />
     </div>
   )
 }
