@@ -1,14 +1,14 @@
 import { useState } from 'react'
 import { useEffect } from 'react'
 import axios from "axios"
-import Countrie from './components/Countrie'
+import Country from './components/Country'
 import CountriesList from './components/countriesList'
 import './App.css'
 import FindCountrie from './components/FindCountrie'
 
 function App() {
   const [countries, setCountries] = useState([])
-  const [searchedCountrie, setSearchedCoutrie] = useState("")
+  const [InputCountry, setInputCountry] = useState("")
 
   useEffect(()=>{
     axios
@@ -17,16 +17,16 @@ function App() {
         setCountries(data)})
   },[])
 
-  const filteredCountries = countries.filter((countrie)=> countrie.name.common.toLowerCase().includes(searchedCountrie))
-  const showedCountrie = searchedCountrie.length > 0 ? filteredCountries : []
+  const filteredCountries = countries.filter((countrie)=> countrie.name.common.toLowerCase().includes(InputCountry))
+  const showedCountrie = InputCountry.length > 0 ? filteredCountries : []
 
 
   return (
     <>
-      <FindCountrie searchedCountrie={searchedCountrie} setSearchedCoutrie={setSearchedCoutrie}/>
+      <FindCountrie InputCountry={InputCountry} setInputCountry={setInputCountry}/>
       <div>
         {showedCountrie.length > 10   ? <p>Too many matches, specify another filter</p> : 
-         showedCountrie.length === 1  ? <Countrie countrie={showedCountrie[0]}/> 
+         showedCountrie.length === 1  ? <Country countrie={showedCountrie[0]}/> 
                                       : <CountriesList showedCountrie={showedCountrie}/>}
       </div>
     </>

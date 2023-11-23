@@ -1,8 +1,8 @@
 /* eslint-disable react/prop-types */
 
-const FindCountrie = ({searchedCountrie, setSearchedCoutrie}) => {
+const FindCountrie = ({inputCountry, setInputCountry}) => {
   return (
-    <div>Find countries <input type="text" value={searchedCountrie} onChange={({target})=>setSearchedCoutrie(target.value)} /></div>
+    <div>Find countries <input type="text" value={inputCountry} onChange={({target})=>setInputCountry(target.value)} /></div>
   )
 }
 
