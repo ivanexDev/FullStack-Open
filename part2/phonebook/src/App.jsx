@@ -4,14 +4,11 @@ import Filter from './components/Filter'
 import Persons from './components/Persons'
 import { useEffect } from 'react'
 import phoneServices from "./services/phones"
+import Notification from './components/Notification'
+import "./App.css"
 
 const App = () => {
-  const [ persons, setPersons ] = useState([
-    { name: 'Arto Hellas', number: '040-123456' },
-    { name: 'Ada Lovelace', number: '39-44-5323523' },
-    { name: 'Dan Abramov', number: '12-43-234345' },
-    { name: 'Mary Poppendieck', number: '39-23-6423122' }
-  ]) 
+  const [ persons, setPersons ] = useState([]) 
 
 useEffect(()=>{
   phoneServices.getAll().then((res)=>setPersons(res))
@@ -22,6 +19,16 @@ useEffect(()=>{
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [filter, setFilter] = useState("")
+  const [confirmMessage, setConfirmMessage] = useState(null)
+
+  const sendConfirmMessage = ()=>{
+    setConfirmMessage(
+      ` Added ${newName}`
+    )
+    setTimeout(() => {
+      setConfirmMessage(null)
+    }, 5000)
+  }
 
   const handleName = (event)=>{
     setNewName(event.target.value)
@@ -41,8 +48,13 @@ useEffect(()=>{
         const contact = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
         const changedNumber = {...contact, number: newNumber}
 
-        phoneServices.updatePhone(changedNumber.id,changedNumber).then(res=> console.log(res))
-        setPersons(persons.map(person => person.name === newName ? changedNumber : person))
+        phoneServices.updatePhone(changedNumber.id,changedNumber).then(res=> {
+          setPersons(persons.map(person => person.name === newName ? changedNumber : person))
+          sendConfirmMessage()
+          console.log(res)})
+        
+
+
         
         setNewName("")
         setNewNumber("")
@@ -55,6 +67,7 @@ useEffect(()=>{
 
     phoneServices.create(newContact).then(res=>{
       console.log(res)
+      sendConfirmMessage()
       setPersons(persons.concat(res))})
 
     
@@ -75,6 +88,7 @@ useEffect(()=>{
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={confirmMessage}/>
       <Filter filter={filter} setFilter={setFilter}/>
       <h3>Add a new</h3>
       <PersonForm handleNewPerson={handleNewPerson} newName={newName} handleName={handleName} newNumber={newNumber} handleNumber={handleNumber}/>
