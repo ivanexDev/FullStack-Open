@@ -43,9 +43,17 @@ useEffect(()=>{
 
     const newContact = {name:newName, number: newNumber}
 
-    phoneServices.create(newContact).then(res=>console.log(res))
+    phoneServices.create(newContact).then(res=>{
+      console.log(res)
+      setPersons(persons.concat(res))})
 
-    setPersons(persons.concat(newContact))
+    
+  }
+
+  const deletePerson = (id)=>{
+    if(confirm("Esta seguro que quiere eliminarlo?"))
+   { phoneServices.deleteContact(id).then(res=>console.log(res))
+    setPersons(persons.filter((person)=> person.id != id))}
   }
 
   const renderedPersons = filter.length === 0 ? persons : persons.filter(({name})=>{
@@ -61,7 +69,7 @@ useEffect(()=>{
       <h3>Add a new</h3>
       <PersonForm handleNewPerson={handleNewPerson} newName={newName} handleName={handleName} newNumber={newNumber} handleNumber={handleNumber}/>
       <h3>Numbers</h3>
-      <Persons renderedPersons={renderedPersons} />
+      <Persons renderedPersons={renderedPersons} deletePerson={deletePerson} />
     </div>
   )
 }

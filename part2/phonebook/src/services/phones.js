@@ -11,8 +11,14 @@ const create = (newContact)=>{
     return request.then(res=>res.data)
 }
 
+const deleteContact = (id)=>{
+    const request = axios.delete(`${baserUrl}/${id}`)
+    return request.then(res=>res)
+}
+
 
 export default{
     getAll,
-    create
+    create,
+    deleteContact
 }
