@@ -21,9 +21,9 @@ useEffect(()=>{
   const [filter, setFilter] = useState("")
   const [confirmMessage, setConfirmMessage] = useState(null)
 
-  const sendConfirmMessage = ()=>{
+  const sendConfirmMessage = (confirm)=>{
     setConfirmMessage(
-      ` Added ${newName}`
+      confirm === "confirm"? `Added ${newName}` : `Error ${newName} no existe en la base de datos`
     )
     setTimeout(() => {
       setConfirmMessage(null)
@@ -48,14 +48,14 @@ useEffect(()=>{
         const contact = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
         const changedNumber = {...contact, number: newNumber}
 
-        phoneServices.updatePhone(changedNumber.id,changedNumber).then(res=> {
-          setPersons(persons.map(person => person.name === newName ? changedNumber : person))
-          sendConfirmMessage()
-          console.log(res)})
-        
-
-
-        
+        phoneServices.updatePhone(changedNumber.id,changedNumber)
+        .then(()=> {setPersons(persons.map(person => person.name === newName ? changedNumber : person))})
+        .catch(error=>{
+          console.log(error)
+          sendConfirmMessage("error")
+          setPersons(persons.filter((person)=> person.name != newName))
+        } )
+         
         setNewName("")
         setNewNumber("")
         return
@@ -67,7 +67,7 @@ useEffect(()=>{
 
     phoneServices.create(newContact).then(res=>{
       console.log(res)
-      sendConfirmMessage()
+      sendConfirmMessage("confirm")
       setPersons(persons.concat(res))})
 
     
