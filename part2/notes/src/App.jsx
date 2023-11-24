@@ -1,9 +1,9 @@
 /* eslint-disable react/prop-types */
-import axios from "axios"
 import { useEffect } from 'react'
 import './App.css'
 import Note from './components/Note'
 import { useState } from 'react'
+import noteService from "./services/notes"
 
 function App() {
 
@@ -12,30 +12,46 @@ function App() {
   const [showAll, setShowAll] = useState(true)
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/notes')
+    noteService
+      .getAll()
       .then(response => {
-        console.log('promise fulfilled')
-        setNotes(response.data)
+        setNotes(response)
       })
   }, [])
-  console.log('render', notes.length, 'notes')
 
   const addNote = (event) => { 
     event.preventDefault()
     const noteObject = { 
-      id: notes.length + 1,
+      // id: notes.length + 1,
       content: newNote,
       date: new Date().toISOString(),
       important: Math.random() < 0.5}
+      noteService
+      .create(noteObject)
+        .then(res=> {
+          console.log(res)
+          setNotes([...notes,res])
+          setNewNote('')
+        })
 
-    setNotes([...notes,noteObject])
-    setNewNote('')
+
    }
 
    const handleNoteChange = (event) => {
     setNewNote(event.target.value)
+   }
+
+   const toggleImportance = (id)=>{
+    const note = notes.find((n)=> n.id === id)
+    const changedNote = {...note, important: !note.important}
+  noteService
+    .update(id, changedNote )
+      .then(res=> {
+        setNotes(notes.map((note)=> note.id != id ? note : res))})
+      .catch(() =>{
+        alert(`La nota ${note.content}, ya no existe en la base de datos.`)
+        setNotes(notes.filter((n)=>n.id != id))
+      })
    }
 
 
@@ -47,7 +63,7 @@ return (
     <h1>Notes</h1>
     <ul>
       {
-        notesToShow.map((note)=> <Note key={note.id} note={note.content} />)
+        notesToShow.map((note)=> <Note key={note.id} note={note} toggleImportance={toggleImportance}/>)
       }
     </ul>
     <form onSubmit={addNote}>

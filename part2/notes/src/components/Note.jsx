@@ -1,7 +1,10 @@
 /* eslint-disable react/prop-types */
-const Note = ({note})=>{
+const Note = ({note, toggleImportance})=>{
+  const label = note.important.toString()
     return (
-      <li>{note}</li>
+      <li>{note.content}
+        <button onClick={()=>toggleImportance(note.id)}>{label}</button>
+      </li>
     )
   }
 

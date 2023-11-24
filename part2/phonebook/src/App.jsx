@@ -3,7 +3,7 @@ import PersonForm from './components/PersonForm'
 import Filter from './components/Filter'
 import Persons from './components/Persons'
 import { useEffect } from 'react'
-import axios from "axios"
+import phoneServices from "./services/phones"
 
 const App = () => {
   const [ persons, setPersons ] = useState([
@@ -14,9 +14,7 @@ const App = () => {
   ]) 
 
 useEffect(()=>{
-  axios
-    .get("http://localhost:3001/persons")
-    .then(({data})=>setPersons(data))
+  phoneServices.getAll().then((res)=>setPersons(res))
 },[])
 
 
@@ -42,7 +40,12 @@ useEffect(()=>{
       setNewName("")
       return
     }
-    setPersons(persons.concat({name:newName, number: newNumber}))
+
+    const newContact = {name:newName, number: newNumber}
+
+    phoneServices.create(newContact).then(res=>console.log(res))
+
+    setPersons(persons.concat(newContact))
   }
 
   const renderedPersons = filter.length === 0 ? persons : persons.filter(({name})=>{
