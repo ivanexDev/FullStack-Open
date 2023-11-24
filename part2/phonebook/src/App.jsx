@@ -36,8 +36,18 @@ useEffect(()=>{
     const verify = persons.some((person)=> person.name.toLowerCase() === newName.toLowerCase())
 
     if(verify){
-      alert(`El nombre: ${newName}  ya existe, ingrese otro.`)
-      setNewName("")
+      if(confirm(`${newName} ya existe, desea cambiar su numero telefonico?`)){
+
+        const contact = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
+        const changedNumber = {...contact, number: newNumber}
+
+        phoneServices.updatePhone(changedNumber.id,changedNumber).then(res=> console.log(res))
+        setPersons(persons.map(person => person.name === newName ? changedNumber : person))
+        
+        setNewName("")
+        setNewNumber("")
+        return
+      }
       return
     }
 
