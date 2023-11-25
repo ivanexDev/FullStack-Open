@@ -31,6 +31,17 @@ app.get("/api/persons", (request, response) =>{
     response.json(persons)
 })
 
+app.get("/info", (request, response) =>{
+
+const peopleCount =  persons.length
+const date = new Date().toISOString()
+const message = `<p>Phonebook has info for ${peopleCount} people</p>
+<p>${date}</p>
+`
+
+    response.send(message).end()
+})
+
 app.listen(3001, ()=>{
     console.log("http://localhost:3001")
 })
