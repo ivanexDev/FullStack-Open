@@ -1,4 +1,5 @@
 const express = require("express")
+const morgan = require('morgan')
 
 let persons = [
     {
@@ -23,9 +24,24 @@ let persons = [
     }
 ]
 
+const requestLogger = (request, response, next) => {
+    console.log('Method:', request.method)
+    console.log('Path:  ', request.path)
+    console.log('Body:  ', request.body)
+    console.log('---')
+    next()
+  }
+
+  const unknownEndpoint = (request, response) => {
+    response.status(404).send({ error: 'unknown endpoint' })
+}
+
 const app =  express()
 
 app.use(express.json())
+app.use(requestLogger)
+app.use(morgan("tiny"))
+
 
 //Persons
 
@@ -100,6 +116,9 @@ const message = `<p>Phonebook has info for ${peopleCount} people</p>
 
     response.send(message).end()
 })
+
+
+app.use(unknownEndpoint)
 
 app.listen(3001, ()=>{
     console.log("http://localhost:3001")
