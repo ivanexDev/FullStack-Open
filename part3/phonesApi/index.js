@@ -27,6 +27,8 @@ const app =  express()
 
 app.use(express.json())
 
+//Persons
+
 app.get("/api/persons", (request, response) =>{
     response.json(persons)
 })
@@ -55,6 +57,31 @@ app.delete("/api/persons/:id", (request, response) =>{
     response.json({message: `La persona con el id: ${id} ha sido eliminada existosamente`})
 
 })
+
+app.post("/api/persons", (request, response)=>{
+    const {name,number} = request.body
+    if(!name){
+        return response.status(400).json({message: "Name no existe"})
+    }
+
+    if(!number){
+        return response.status(400).json({message: "Number no existe"})
+    }
+
+    const id = Math.floor(Math.random() * 10000)
+
+    const newPerson = {
+        id,
+        name,
+        number
+    }
+    persons = persons.concat(newPerson)
+
+    response.json(newPerson)
+})
+
+
+//Info
 
 app.get("/info", (request, response) =>{
 
