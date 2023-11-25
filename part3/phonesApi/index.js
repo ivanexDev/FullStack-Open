@@ -31,6 +31,18 @@ app.get("/api/persons", (request, response) =>{
     response.json(persons)
 })
 
+app.get("/api/persons/:id", (request, response) =>{
+    const id = Number(request.params.id)
+    const person = persons.find(person=> person.id === id)
+    console.log(person)
+
+    if(!person){
+        return response.status(204).end()
+    }
+    
+    response.json(person)
+})
+
 app.get("/info", (request, response) =>{
 
 const peopleCount =  persons.length
