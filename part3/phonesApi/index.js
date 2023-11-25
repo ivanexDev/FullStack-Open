@@ -34,13 +34,26 @@ app.get("/api/persons", (request, response) =>{
 app.get("/api/persons/:id", (request, response) =>{
     const id = Number(request.params.id)
     const person = persons.find(person=> person.id === id)
-    console.log(person)
 
     if(!person){
-        return response.status(204).end()
+        return response.status(404).json({message: `La persona con id: ${id} no existe`})
     }
     
     response.json(person)
+})
+
+app.delete("/api/persons/:id", (request, response) =>{
+    const id = Number(request.params.id)
+    const personExist = persons.some(person=> Number(person.id) === Number(id))
+
+    if(!personExist){
+        return response.status(404).json({message: `El id: ${id} no existe`})
+    }
+
+    persons = persons.filter(person=> person.id != id)
+
+    response.json({message: `La persona con el id: ${id} ha sido eliminada existosamente`})
+
 })
 
 app.get("/info", (request, response) =>{
