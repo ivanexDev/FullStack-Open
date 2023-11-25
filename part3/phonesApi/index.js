@@ -60,6 +60,13 @@ app.delete("/api/persons/:id", (request, response) =>{
 
 app.post("/api/persons", (request, response)=>{
     const {name,number} = request.body
+
+    const personExist = persons.some(person => person.name === name)
+
+    if(personExist){
+        return response.status(409).json({ error: 'Ya exise este nombre'})
+    }
+
     if(!name){
         return response.status(400).json({message: "Name no existe"})
     }
