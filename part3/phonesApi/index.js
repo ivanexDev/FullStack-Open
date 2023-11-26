@@ -45,6 +45,7 @@ morgan.token('body', req =>{
 
 const app =  express()
 app.use(cors())
+app.use(express.static("build"))
 app.use(express.json())
 app.use(requestLogger)
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
