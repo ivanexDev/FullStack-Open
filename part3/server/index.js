@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+const cors = require('cors')
 
 let notes = [
     {
@@ -29,7 +30,10 @@ const maxId = notes.length > 0
 return maxId + 1
 }
 
+  app.use(cors())
+  app.use(express.static("build"))
   app.use(express.json())
+
 
   app.get('/', (request, response) => {
     response.send('<h1>Hello World!</h1>')
@@ -87,7 +91,7 @@ return maxId + 1
   })
 
 
-  const PORT = 3001
+  const PORT = process.env.PORT || 3001
   app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`)
+    console.log(`http://localhost:${PORT}`)
   })
