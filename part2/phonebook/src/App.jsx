@@ -40,28 +40,28 @@ useEffect(()=>{
   const handleNewPerson = (event)=>{
     event.preventDefault()
 
-    const verify = persons.some((person)=> person.name.toLowerCase() === newName.toLowerCase())
+    // const verify = persons.some((person)=> person.name.toLowerCase() === newName.toLowerCase())
 
-    if(verify){
-      if(confirm(`${newName} ya existe, desea cambiar su numero telefonico?`)){
+    // if(verify){
+    //   if(confirm(`${newName} ya existe, desea cambiar su numero telefonico?`)){
 
-        const contact = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
-        const changedNumber = {...contact, number: newNumber}
+    //     const contact = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
+    //     const changedNumber = {...contact, number: newNumber}
 
-        phoneServices.updatePhone(changedNumber.id,changedNumber)
-        .then(()=> {setPersons(persons.map(person => person.name === newName ? changedNumber : person))})
-        .catch(error=>{
-          console.log(error)
-          sendConfirmMessage("error")
-          setPersons(persons.filter((person)=> person.name != newName))
-        } )
+    //     phoneServices.updatePhone(changedNumber.id,changedNumber)
+    //     .then(()=> {setPersons(persons.map(person => person.name === newName ? changedNumber : person))})
+    //     .catch(error=>{
+    //       console.log(error)
+    //       sendConfirmMessage("error")
+    //       setPersons(persons.filter((person)=> person.name != newName))
+    //     } )
          
-        setNewName("")
-        setNewNumber("")
-        return
-      }
-      return
-    }
+    //     setNewName("")
+    //     setNewNumber("")
+    //     return
+    //   }
+    //   return
+    // }
 
     const newContact = {name:newName, number: newNumber}
 
