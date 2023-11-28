@@ -1,6 +1,7 @@
 const express = require("express")
 const morgan = require('morgan')
 const cors = require("cors")
+const Phone = require("./models/person")
 
 let persons = [
     {
@@ -54,7 +55,9 @@ app.use(morgan(':method :url :status :res[content-length] - :response-time ms :b
 //Persons
 
 app.get("/api/persons", (request, response) =>{
-    response.json(persons)
+    Phone.find({}).then(res=>{
+        response.json(res)
+    })
 })
 
 app.get("/api/persons/:id", (request, response) =>{
@@ -85,11 +88,11 @@ app.delete("/api/persons/:id", (request, response) =>{
 app.post("/api/persons", (request, response)=>{
     const {name,number} = request.body
 
-    const personExist = persons.some(person => person.name === name)
+    // const personExist = persons.some(person => person.name === name)
 
-    if(personExist){
-        return response.status(409).json({ error: 'Ya exise este nombre'})
-    }
+    // if(personExist){
+    //     return response.status(409).json({ error: 'Ya exise este nombre'})
+    // }
 
     if(!name){
         return response.status(400).json({message: "Name no existe"})
@@ -99,16 +102,14 @@ app.post("/api/persons", (request, response)=>{
         return response.status(400).json({message: "Number no existe"})
     }
 
-    const id = Math.floor(Math.random() * 10000)
-
-    const newPerson = {
-        id,
+    const newPerson = new Phone({
         name,
         number
-    }
-    persons = persons.concat(newPerson)
+    })
 
-    response.json(newPerson)
+    newPerson.save().then(person=>{
+      response.json(person)
+    })
 })
 
 
