@@ -14,10 +14,12 @@ mongoose.connect(url)
 const phoneSchema = new mongoose.Schema({
     name: {
       type: String,
+      minlength: 3,
       required: true
     },
     number: {
-      type: Number,
+      type: String,
+      minlength: 8,
       required: true
     }
 })

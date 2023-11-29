@@ -21,9 +21,9 @@ useEffect(()=>{
   const [filter, setFilter] = useState("")
   const [confirmMessage, setConfirmMessage] = useState(null)
 
-  const sendConfirmMessage = (confirm)=>{
+  const sendConfirmMessage = (confirm, message)=>{
     setConfirmMessage(
-      confirm === "confirm"? `Added ${newName}` : `Error ${newName} no existe en la base de datos`
+      confirm === "confirm"? `Added ${newName}` : message
     )
     setTimeout(() => {
       setConfirmMessage(null)
@@ -66,9 +66,12 @@ useEffect(()=>{
     const newContact = {name:newName, number: newNumber}
 
     phoneServices.create(newContact).then(res=>{
-      console.log(res)
+      // console.log(res)
       sendConfirmMessage("confirm")
-      setPersons(persons.concat(res))})
+      setPersons(persons.concat(res))}).catch(error=> {
+        console.log(error)
+        sendConfirmMessage("error", error.response.data.error)
+      })
 
     
   }

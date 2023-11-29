@@ -71,7 +71,7 @@ app.post("/api/persons", (request, response, next)=>{
     const {name,number} = request.body
     const newPerson = new Phone({
         name,
-        number
+        number: number.toString()
     })
 
     Phone.findOne({name}).then(personExist=>{
@@ -84,11 +84,6 @@ app.post("/api/persons", (request, response, next)=>{
             response.status(409).json({message: `El nombre ${name} ya existe en la base de datos`})
         }
     })
-
-    // newPerson
-    //     .save()
-    //     .then(formatedPerson => response.json(formatedPerson))
-    //     .catch(error=> next(error))
 
 })
 
