@@ -3,29 +3,6 @@ const morgan = require('morgan')
 const cors = require("cors")
 const Phone = require("./models/person")
 
-let persons = [
-    {
-        id: 1,
-        name: "Arto Hellas",
-        number: "040-123456"
-    },
-    {
-        id: 2,
-        name: "Ada Lovelace",
-        number: "39-44-5323525"
-    },
-    {
-        id: 3,
-        name: "Dan Abramov",
-        number: "12-43-234345"
-    },
-    {
-        id: 4,
-        name: "Mary Poppendick",
-        number: "39-23-6423112"
-    }
-]
-
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
     console.log('Path:  ', request.path)
@@ -34,9 +11,19 @@ const requestLogger = (request, response, next) => {
     next()
   }
 
-  const unknownEndpoint = (request, response) => {
+const unknownEndpoint = (request, response) => {
     response.status(404).send({ error: 'unknown endpoint' })
 }
+
+const errorHandler = (error, request, response, next) => {
+    console.error(error.message)
+  
+    if (error.name === 'CastError') {
+      return response.status(400).send({ error: 'malformatted id' })
+    } 
+  
+    next(error)
+  }
 
 morgan.token('body', req =>{
     if(req.method === "POST"){
@@ -71,17 +58,10 @@ app.get("/api/persons/:id", (request, response) =>{
     response.json(person)
 })
 
-app.delete("/api/persons/:id", (request, response) =>{
-    const id = Number(request.params.id)
-    const personExist = persons.some(person=> Number(person.id) === Number(id))
+app.delete("/api/persons/:id", (request, response, next) =>{
+    const id = request.params.id
 
-    if(!personExist){
-        return response.status(404).json({message: `El id: ${id} no existe`})
-    }
-
-    persons = persons.filter(person=> person.id != id)
-
-    response.json({message: `La persona con el id: ${id} ha sido eliminada existosamente`})
+    Phone.findByIdAndDelete(id).then(res=> response.status(204).end()).catch(err=> next(err))
 
 })
 
@@ -128,6 +108,7 @@ const message = `<p>Phonebook has info for ${peopleCount} people</p>
 
 
 app.use(unknownEndpoint)
+app.use(errorHandler)
 
 app.listen(3001, ()=>{
     console.log("http://localhost:3001")
