@@ -20,7 +20,9 @@ const errorHandler = (error, request, response, next) => {
   
     if (error.name === 'CastError') {
       return response.status(400).send({ error: 'malformatted id' })
-    } 
+    } else if (error.name === "ValidationError"){
+        return response.status(400).json({error: error.message})
+      }
   
     next(error)
   }
@@ -65,31 +67,29 @@ app.delete("/api/persons/:id", (request, response, next) =>{
 
 })
 
-app.post("/api/persons", (request, response)=>{
+app.post("/api/persons", (request, response, next)=>{
     const {name,number} = request.body
-
-    // const personExist = persons.some(person => person.name === name)
-
-    // if(personExist){
-    //     return response.status(409).json({ error: 'Ya exise este nombre'})
-    // }
-
-    if(!name){
-        return response.status(400).json({message: "Name no existe"})
-    }
-
-    if(!number){
-        return response.status(400).json({message: "Number no existe"})
-    }
-
     const newPerson = new Phone({
         name,
         number
     })
 
-    newPerson.save().then(person=>{
-      response.json(person)
+    Phone.findOne({name}).then(personExist=>{
+        if(!personExist){
+        newPerson
+            .save()
+            .then(formatedPerson => response.json(formatedPerson))
+            .catch(error=> next(error))
+        } else{
+            response.status(409).json({message: `El nombre ${name} ya existe en la base de datos`})
+        }
     })
+
+    // newPerson
+    //     .save()
+    //     .then(formatedPerson => response.json(formatedPerson))
+    //     .catch(error=> next(error))
+
 })
 
 app.put("/api/persons/:id",(request, response, next)=>{
