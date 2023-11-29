@@ -4,7 +4,7 @@ require('dotenv').config()
 const url = process.env.MONGODB_URI
 console.log('connecting to', url)
 mongoose.connect(url)
-  .then(result => {
+  .then(() => {
     console.log('connected to MongoDB')
   })
   .catch((error) => {
@@ -12,16 +12,16 @@ mongoose.connect(url)
   })
 
 const phoneSchema = new mongoose.Schema({
-    name: {
-      type: String,
-      minlength: 3,
-      required: true
-    },
-    number: {
-      type: String,
-      minlength: 8,
-      required: true
-    }
+  name: {
+    type: String,
+    minlength: 3,
+    required: true
+  },
+  number: {
+    type: String,
+    minlength: 8,
+    required: true
+  }
 })
 
 phoneSchema.set('toJSON', {
