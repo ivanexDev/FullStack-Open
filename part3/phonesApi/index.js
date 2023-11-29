@@ -92,6 +92,13 @@ app.post("/api/persons", (request, response)=>{
     })
 })
 
+app.put("/api/persons/:id",(request, response, next)=>{
+    const id = request.params.id
+    const {number} = request.body
+
+    Phone.findByIdAndUpdate(id,{number},{new:true}).then(updatedPerson=> response.json(updatedPerson)).catch(error=> next(error))
+})
+
 
 //Info
 
