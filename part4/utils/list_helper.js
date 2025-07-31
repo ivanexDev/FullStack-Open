@@ -31,7 +31,7 @@ const mostBlogs = (blogs) => {
 
   const [author, count] = lodash.maxBy(
     Object.entries(grouped),
-    ([, count]) => count
+    ([, count]) => count,
   );
 
   return { author, blogs: count };
