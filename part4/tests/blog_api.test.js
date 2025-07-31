@@ -4,9 +4,17 @@ const Blog = require("../models/blog");
 const supertest = require("supertest");
 const assert = require("node:assert");
 const app = require("../app");
-// const { initialNotes, nonExistingId, notesInDb } = require("./test_helpers");
+const { initialBlogs } = require("./test_helpers");
 
 const api = supertest(app);
+
+beforeEach(async () => {
+  await Blog.deleteMany({});
+  const blogs = initialBlogs.map((blog) => new Blog(blog));
+  const promiseBlogs = blogs.map((blog) => blog.save());
+
+  await Promise.all(promiseBlogs);
+});
 
 describe("blogs api", () => {
   test("should get correct number of blogs", async () => {
@@ -15,8 +23,16 @@ describe("blogs api", () => {
       .expect(200)
       .expect("Content-Type", /application\/json/);
 
-    assert.strictEqual(blogs.body.length, 0);
+    assert.strictEqual(blogs.body.length, 2);
+  });
 
+  test("response should contain id intead of _id", async () => {
+    const blogs = await api.get("/bloglist");
+
+    const blog = blogs.body[0];
+
+    assert.strictEqual("id" in blog, true);
+    assert.ok(!("_id" in blog));
   });
 });
 
