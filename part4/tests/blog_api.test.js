@@ -1,10 +1,10 @@
 const { test, after, beforeEach, describe } = require("node:test");
-const mongoose = require("mongoose");
-const Blog = require("../models/blog");
-const supertest = require("supertest");
 const assert = require("node:assert");
+const mongoose = require("mongoose");
+const supertest = require("supertest");
+const Blog = require("../models/blog");
 const app = require("../app");
-const { initialBlogs } = require("./test_helpers");
+const { initialBlogs, blogsInDb } = require("./test_helpers");
 
 const api = supertest(app);
 
@@ -33,6 +33,24 @@ describe("blogs api", () => {
 
     assert.strictEqual("id" in blog, true);
     assert.ok(!("_id" in blog));
+  });
+
+  test("Should create a new blog", async () => {
+    const newBlog = {
+      title: "blog3",
+      author: "Guthrie Govan",
+      url: "http://blog3",
+      likes: 999,
+    };
+
+    const result = await api.post("/bloglist").send(newBlog).expect(201);
+
+    const allPosts = await blogsInDb();
+
+    console.log(result.body);
+
+    assert.strictEqual(allPosts.length, 3);
+    assert.deepStrictEqual(result.body, allPosts[2]);
   });
 });
 
