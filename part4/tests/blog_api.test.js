@@ -52,6 +52,20 @@ describe("blogs api", () => {
     assert.strictEqual(allPosts.length, 3);
     assert.deepStrictEqual(result.body, allPosts[2]);
   });
+
+  test("like should be 0 if the number is not given", async () => {
+    const newBlog = {
+      title: "no likes",
+      author: "boom",
+      url: "http://blog4",
+    };
+
+    const result = await api.post("/bloglist").expect(201).send(newBlog);
+
+    console.log(result.body);
+
+    assert.strictEqual(result.body.likes, 0);
+  });
 });
 
 after(async () => {

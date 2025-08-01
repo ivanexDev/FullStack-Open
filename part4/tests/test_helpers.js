@@ -27,30 +27,28 @@ const notesInDb = async () => {
 
 const initialBlogs = [
   {
-  title: 'blog1',
-  author: 'Ivan',
-  url: 'http://blog1',
-  likes: 5,
+    title: "blog1",
+    author: "Ivan",
+    url: "http://blog1",
+    likes: 5,
   },
   {
-  title: 'blog2',
-  author: 'Sofia',
-  url: 'http://blog2',
-  likes: 10,
-  }
-]
+    title: "blog2",
+    author: "Sofia",
+    url: "http://blog2",
+    likes: 10,
+  },
+];
 
 const blogsInDb = async () => {
   const blogs = await Blog.find({});
   return blogs.map((blog) => blog.toJSON());
 };
 
-
-
 module.exports = {
   initialNotes,
   nonExistingId,
   notesInDb,
   initialBlogs,
-  blogsInDb
+  blogsInDb,
 };
