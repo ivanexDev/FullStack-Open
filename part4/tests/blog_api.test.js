@@ -62,10 +62,26 @@ describe("blogs api", () => {
 
     const result = await api.post("/bloglist").expect(201).send(newBlog);
 
-    console.log(result.body);
-
     assert.strictEqual(result.body.likes, 0);
   });
+
+  test('new blog may contain title and url keys', async()=>{
+
+    const noTitle = {
+      author: "boom",
+      url: "http://blog4",
+    };
+
+    const noUrl = {
+      title: "no likes",
+      author: "boom",
+      url: "http://blog4",
+    };
+
+    await api.post('/bloglist').send(noTitle).expect(400);
+    // await api.post().send(noTitle).expect(400);
+
+  })
 });
 
 after(async () => {

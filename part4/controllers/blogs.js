@@ -19,11 +19,19 @@ blogsRouter.get("/:id", (request, response) => {
 });
 
 blogsRouter.post("/", async (request, response, next) => {
-  const blog = new Blog(request.body);
+  try {
+    if (!request.body.title || !request.body.url) {
+      return response.status(400).json({ error: "Bad Request" });
+    }
 
-  const result = await blog.save();
+    const blog = new Blog(request.body);
 
-  response.status(201).json(result);
+    const result = await blog.save();
+
+    response.status(201).json(result);
+  } catch (error) {
+    next(error);
+  }
 
   // .catch((error) => next(error));
 });
