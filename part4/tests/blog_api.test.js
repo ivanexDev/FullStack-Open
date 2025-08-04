@@ -47,8 +47,6 @@ describe("blogs api", () => {
 
     const allPosts = await blogsInDb();
 
-    console.log(result.body);
-
     assert.strictEqual(allPosts.length, 3);
     assert.deepStrictEqual(result.body, allPosts[2]);
   });
@@ -65,8 +63,7 @@ describe("blogs api", () => {
     assert.strictEqual(result.body.likes, 0);
   });
 
-  test('new blog may contain title and url keys', async()=>{
-
+  test("new blog may contain title and url keys", async () => {
     const noTitle = {
       author: "boom",
       url: "http://blog4",
@@ -78,10 +75,16 @@ describe("blogs api", () => {
       url: "http://blog4",
     };
 
-    await api.post('/bloglist').send(noTitle).expect(400);
+    await api.post("/bloglist").send(noTitle).expect(400);
     // await api.post().send(noTitle).expect(400);
+  });
 
-  })
+  test("should delete one blog", async () => {
+    const allPosts = await blogsInDb();
+    const id = allPosts[0].id;
+
+    await api.delete(`/bloglist/${id}`).expect(204);
+  });
 });
 
 after(async () => {
