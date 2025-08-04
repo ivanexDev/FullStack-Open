@@ -85,6 +85,36 @@ describe("blogs api", () => {
 
     await api.delete(`/bloglist/${id}`).expect(204);
   });
+
+  test("should update likes of a blog", async () => {
+    const newContent = {
+      // author: 'Paul',
+      // url: 'http://paul2',
+      likes: 95,
+    };
+
+    const allPosts = await blogsInDb();
+    const targetId = allPosts[0].id;
+
+    const response = await api
+      .patch(`/bloglist/${targetId}`)
+      .send(newContent)
+      .expect(200);
+
+    const { likes } = response.body;
+
+    assert.deepEqual(likes, newContent.likes);
+  });
+
+  test("update should contain likes", async () => {
+    const allPosts = await blogsInDb();
+    const targetId = allPosts[0].id;
+
+    await api
+      .patch(`/bloglist/${targetId}`)
+      .send({ author: "anyone" })
+      .expect(400);
+  });
 });
 
 after(async () => {
