@@ -9,6 +9,7 @@ const helper = require("./test_helpers");
 
 const Note = require("../models/note");
 
+
 describe("when there is initially some notes saved", () => {
   beforeEach(async () => {
     await Note.deleteMany({});
@@ -64,9 +65,14 @@ describe("when there is initially some notes saved", () => {
 
   describe("addition of a new note", () => {
     test("succeeds with valid data", async () => {
+
+      const users = await helper.usersInDb();
+      const userId = users[0].id;
+
       const newNote = {
         content: "async/await simplifies making async calls",
         important: true,
+        userId
       };
 
       await api
