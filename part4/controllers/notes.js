@@ -11,21 +11,26 @@ const getTokenFrom = request => {
   return null
 }
 
-notesRouter.get("/", async (request, response) => {
-  const notes = await Note.find({}).populate("user", { username: 1, name: 1 });
+notesRouter.get("/", async (request, response, next) => {
+  try {
+      const notes = await Note.find({}).populate("user", { username: 1, name: 1 });
   response.json(notes);
+  } catch (error) {
+    next(error)
+  }
 });
 
 notesRouter.get("/:id", async (request, response, next) => {
   try {
-  const note = await Note.findById(request.params.id);
-  if (note) {
+    const note = await Note.findById(request.params.id);
+
+    if (!note) {
+      return response.status(404).end();
+    }
+
     response.json(note);
-  } else {
-    response.status(404).end();
-  }
-  } catch {
-    (error) => next(error);
+  } catch (error) {
+    next(error); // Si es CastError, tu handler responderá con 400
   }
 });
 

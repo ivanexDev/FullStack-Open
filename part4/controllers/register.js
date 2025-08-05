@@ -7,8 +7,22 @@ const registerRouter = require("express").Router();
 registerRouter.post("/", async (request, response, next) => {
   try {
     const { username, name, password } = request.body;
+
+    if(!username || !password){
+      return response.status(400).json({ error: "Username and password are required" });
+    }
+
+    if(username.length < 4 || password < 4){
+      return response.status(400).json({ error: "Username and password must be larger than 3 characters" });
+    }
+
+
     const salt = 10;
     const passwordHash = bcrypt.hashSync(password, salt);
+
+    console.log(!username || !password)
+
+
 
     const user = new User({
       username,

@@ -16,7 +16,7 @@ beforeEach(async () => {
   await Promise.all(promiseBlogs);
 });
 
-describe("blogs api", () => {
+describe("Blogs api", () => {
   test("should get correct number of blogs", async () => {
     const blogs = await api
       .get("/bloglist")
