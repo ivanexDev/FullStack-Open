@@ -23,8 +23,6 @@ registerRouter.post("/", async (request, response, next) => {
     const salt = 10;
     const passwordHash = bcrypt.hashSync(password, salt);
 
-    console.log(!username || !password);
-
     const user = new User({
       username,
       name,

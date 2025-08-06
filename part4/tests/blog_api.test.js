@@ -17,6 +17,19 @@ beforeEach(async () => {
 });
 
 describe("Blogs api", () => {
+  test("Create a new blog should fail if token isnt given", async () => {
+    const newBlog = {
+      title: "blog",
+      author: "user",
+      url: "https://url",
+      likes: 1000,
+    };
+
+    const result = await api.post("/bloglist").send(newBlog).expect(401);
+
+    assert.strictEqual(result.body.error, "Unauthorized");
+  });
+
   test("should get correct number of blogs", async () => {
     const blogs = await api
       .get("/bloglist")
@@ -43,22 +56,41 @@ describe("Blogs api", () => {
       likes: 999,
     };
 
-    const result = await api.post("/bloglist").send(newBlog).expect(201);
+    const newUser = await api
+      .post("/register")
+      .send({ username: "test", name: "test", password: "123123" });
+    const token = newUser.body.token;
 
-    const allPosts = await blogsInDb();
+    const result = await api
+      .post("/bloglist")
+      .set("Authorization", `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201);
 
-    assert.strictEqual(allPosts.length, 3);
-    assert.deepStrictEqual(result.body, allPosts[2]);
+    const allBlogs = await blogsInDb();
+
+    assert.strictEqual(allBlogs.length, 3);
+
+    assert.strictEqual(String(allBlogs[2].user), result.body.user);
   });
 
   test("like should be 0 if the number is not given", async () => {
+    const newUser = await api
+      .post("/register")
+      .send({ username: "test2", name: "test", password: "123123" });
+    const token = newUser.body.token;
+
     const newBlog = {
       title: "no likes",
       author: "boom",
       url: "http://blog4",
     };
 
-    const result = await api.post("/bloglist").expect(201).send(newBlog);
+    const result = await api
+      .post("/bloglist")
+      .set("Authorization", `Bearer ${token}`)
+      .expect(201)
+      .send(newBlog);
 
     assert.strictEqual(result.body.likes, 0);
   });
@@ -80,10 +112,37 @@ describe("Blogs api", () => {
   });
 
   test("should delete one blog", async () => {
-    const allPosts = await blogsInDb();
-    const id = allPosts[0].id;
+    const newUser = await api
+      .post("/register")
+      .send({ username: "test3", name: "test", password: "123123" });
 
-    await api.delete(`/bloglist/${id}`).expect(204);
+    const token = newUser.body.token;
+
+    const newBlog = {
+      title: "Blog to delete",
+      author: "Delete Me",
+      url: "http://delete-me.com",
+      likes: 0,
+    };
+
+    const createdBlog = await api
+      .post("/bloglist")
+      .set("Authorization", `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201);
+
+    const blogsAfterCreate = await blogsInDb();
+
+    await api
+      .delete(`/bloglist/${createdBlog.body.id}`)
+      .set("Authorization", `Bearer ${token}`)
+      .expect(204);
+
+    const blogsAtEnd = await blogsInDb();
+    assert.strictEqual(blogsAtEnd.length, blogsAfterCreate.length - 1);
+
+    const ids = blogsAtEnd.map((blog) => blog.id);
+    assert.ok(!ids.includes(createdBlog.body.id));
   });
 
   test("should update likes of a blog", async () => {

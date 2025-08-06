@@ -66,7 +66,7 @@ describe("when there is initially some notes saved", () => {
     test("succeeds with valid data", async () => {
       const newUser = await api
         .post("/register")
-        .send({ username: "test", name: "test", password: "123" });
+        .send({ username: "test4", name: "test", password: "123123" });
       const token = newUser.body.token;
 
       const newNote = {
