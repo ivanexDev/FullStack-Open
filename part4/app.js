@@ -34,7 +34,7 @@ app.use(middleware.tokenExtractor);
 app.use("/register", registerRouter);
 app.use("/login", loginRouter);
 app.use("/api/notes", notesRouter);
-app.use("/bloglist", blogsRouter);
+app.use("/bloglist", middleware.userExtractor, blogsRouter);
 app.use("/api/users", usersRouter);
 
 app.use(middleware.unknownEndpoint);
