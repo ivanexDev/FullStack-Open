@@ -2,14 +2,7 @@ const jwt = require("jsonwebtoken");
 const notesRouter = require("express").Router();
 const Note = require("../models/note");
 const User = require("../models/user");
-
-const getTokenFrom = (request) => {
-  const authorization = request.get("authorization");
-  if (authorization && authorization.startsWith("Bearer ")) {
-    return authorization.replace("Bearer ", "");
-  }
-  return null;
-};
+const { getTokenFrom } = require("../utils/helpers");
 
 notesRouter.get("/", async (request, response, next) => {
   try {

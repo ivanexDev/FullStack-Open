@@ -15,11 +15,9 @@ registerRouter.post("/", async (request, response, next) => {
     }
 
     if (username.length < 4 || password.length < 4) {
-      return response
-        .status(400)
-        .json({
-          error: "Username and password must be larger than 3 characters",
-        });
+      return response.status(400).json({
+        error: "Username and password must be larger than 3 characters",
+      });
     }
 
     const salt = 10;
