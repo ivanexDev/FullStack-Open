@@ -8,7 +8,7 @@ const registerRouter = require("./controllers/register");
 const loginRouter = require("./controllers/login");
 const notesRouter = require("./controllers/notes");
 const blogsRouter = require("./controllers/blogs");
-const usersRouter = require("./controllers/users")
+const usersRouter = require("./controllers/users");
 const middleware = require("./utils/middleware");
 const logger = require("./utils/logger");
 

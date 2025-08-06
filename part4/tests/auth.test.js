@@ -30,7 +30,10 @@ describe("Register and login", () => {
 
     const result = await api.post("/register").send(newUser).expect(400);
 
-    assert.strictEqual(result.body.error, "Username and password must be larger than 3 characters");
+    assert.strictEqual(
+      result.body.error,
+      "Username and password must be larger than 3 characters",
+    );
   });
 });
 

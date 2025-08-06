@@ -57,5 +57,5 @@ module.exports = {
   notesInDb,
   initialBlogs,
   blogsInDb,
-  usersInDb
+  usersInDb,
 };

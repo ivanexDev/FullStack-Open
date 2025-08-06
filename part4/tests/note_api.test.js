@@ -60,14 +60,14 @@ describe("when there is initially some notes saved", () => {
 
       await api.get(`/api/notes/${invalidId}`).expect(400);
     });
-    
   });
 
   describe("addition of a new note", () => {
     test("succeeds with valid data", async () => {
-
-      const newUser = await api.post('/register').send({username: "test", name:'test', password: '123'});
-      const token = newUser.body.token
+      const newUser = await api
+        .post("/register")
+        .send({ username: "test", name: "test", password: "123" });
+      const token = newUser.body.token;
 
       const newNote = {
         content: "async/await simplifies making async calls",
@@ -76,7 +76,7 @@ describe("when there is initially some notes saved", () => {
 
       await api
         .post("/api/notes")
-        .set('Authorization', `Bearer ${token}`)
+        .set("Authorization", `Bearer ${token}`)
         .send(newNote)
         .expect(201)
         .expect("Content-Type", /application\/json/);
