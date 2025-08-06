@@ -12,7 +12,7 @@ registerRouter.post("/", async (request, response, next) => {
       return response.status(400).json({ error: "Username and password are required" });
     }
 
-    if(username.length < 4 || password < 4){
+    if(username.length < 4 || password.length < 4){
       return response.status(400).json({ error: "Username and password must be larger than 3 characters" });
     }
 
