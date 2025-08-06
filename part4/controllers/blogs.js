@@ -35,7 +35,10 @@ blogsRouter.post("/", async (request, response, next) => {
 
     const user = await User.findById(decodedToken.id);
 
-    const blog = new Blog(request.body);
+    const blog = new Blog({
+      ...request.body,
+      user: user._id,
+    });
 
     const savedBlog = await blog.save();
 
@@ -49,12 +52,31 @@ blogsRouter.post("/", async (request, response, next) => {
   }
 });
 
-blogsRouter.delete("/:id", (request, response) => {
-  Blog.findByIdAndDelete(request.params.id)
-    .then(() => {
-      response.status(204).end();
-    })
-    .catch((error) => next(error));
+blogsRouter.delete("/:id", async (request, response, next) => {
+  try {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: "token invalid" });
+    }
+
+    const blog = await Blog.findById(request.params.id);
+
+    if (!blog) {
+      return response.status(404).json({ error: "Blog not found" });
+    }
+
+    if (blog.user.toString() !== decodedToken.id) {
+      return response
+        .status(403)
+        .json({ error: "Forbidden: Not the blog owner" });
+    }
+
+    await blog.deleteOne();
+
+    response.status(204).end();
+  } catch (error) {
+    next(error);
+  }
 });
 
 blogsRouter.patch("/:id", async (request, response, next) => {
